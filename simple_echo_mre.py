@@ -50,7 +50,7 @@ async def breakit():
         assert get_response.status_code < 300, "MCP is fully broken"
 
 
-async def main():
+async def run_and_break_the_mcp():
     mcp.settings.stateless_http = True
     run_task = asyncio.create_task(mcp.run_async(transport="streamable-http"))
     await asyncio.sleep(1)  # allow time for the server to start
@@ -61,5 +61,9 @@ async def main():
         run_task.cancel()
 
 
+def main():
+    asyncio.run(run_and_break_the_mcp())
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
