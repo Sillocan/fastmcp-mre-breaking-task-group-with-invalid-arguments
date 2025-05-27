@@ -1,16 +1,17 @@
 # /// script
 # requires-python = ">=3.13"
 # dependencies = [
-#     "fastmcp==2.5.1",
+#     "mcp==1.9.1",
 # ]
 # ///
 """
-FastMCP Echo Server
+This example uses `mcp.fastmcp` to demonstrate the issue.
 """
 
 import asyncio
-from fastmcp import FastMCP
+
 import httpx
+from mcp.server.fastmcp import FastMCP
 
 # Create server
 mcp = FastMCP("Echo Server")
@@ -29,7 +30,10 @@ async def breakit():
     """Passes `arguments` as a string which breaks the MCP fully"""
     payload = {
         "method": "tools/call",
-        "params": {"name": "echo", "arguments": '{"text": "imnestedtext"}'},
+        "params": {
+            "name": "echo",
+            "arguments": '{"text": "imnestedtext"}',  # NOTE: this is a string
+        },
         "jsonrpc": "2.0",
         "id": 2,
     }
@@ -52,7 +56,7 @@ async def breakit():
 
 async def run_and_break_the_mcp():
     mcp.settings.stateless_http = True
-    run_task = asyncio.create_task(mcp.run_async(transport="streamable-http"))
+    run_task = asyncio.create_task(mcp.run_streamable_http_async())
     await asyncio.sleep(1)  # allow time for the server to start
     try:
         await breakit()
